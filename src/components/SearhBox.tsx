@@ -12,7 +12,7 @@ export const SearhBox = () => {
           flexDirection: "row",
           alignItems: "center",
           display: "flex",
-          backgroundColor: "red",
+          // backgroundColor: "red",
         }}
       >
         <img

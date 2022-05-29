@@ -6,8 +6,8 @@
 # Reconstruir las dependecias de react y correr la app
 
 ```
-npm install
-npm start
+yarn install
+yarn start
 ```
 
 # Configurar las variables de entorno en el backend
