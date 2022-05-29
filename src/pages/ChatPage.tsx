@@ -11,7 +11,7 @@ export const ChatPage = () => {
     <div className="inbox_msg">
       <div className="messaging">
         <InboxPeople />
-        {/* este select chat es si el usuario n oha seleccioando ningun chat entonces muestra un icono */}
+        {/* this select chat es si el usuario n oha seleccioando ningun chat entonces muestra un icono */}
         {chatState.chatActivo ? <Messages /> : <SelectChat />}
       </div>
     </div>
