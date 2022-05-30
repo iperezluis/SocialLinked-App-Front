@@ -23,11 +23,12 @@ export const SocketProvider = ({
   const { loadUsers, newMessage } = useContext(ChatContext);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const { onLine, socket, connectSocket, disconnectSocket } = useSocket(
-    "http://localhost:3500"
+    // "http://localhost:3500" --> development
+    "https://socialinked-app.herokuapp.com" /*--> production*/
   );
   //--> este es el localhost del servidor(backEnd)
   //FALTA POR HACER EL POST DE IMAGENES AL CHAT #FFF
-// cleanChat function suing useCallback
+  // cleanChat function suing useCallback
   useEffect(() => {
     if (auth.logged) {
       return connectSocket();
