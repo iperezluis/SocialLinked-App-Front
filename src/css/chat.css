@@ -129,7 +129,7 @@ img {
   display: inline-block;
   padding: 0 0 0 10px;
   vertical-align: top;
-  width: 92%;
+  width: 50%;
 }
 
 .received_withd_msg p {
@@ -142,6 +142,33 @@ img {
   width: 100%;
 }
 
+#loading-bar-left {
+  animation: loading-bar-morph 1s linear 0.1s infinite;
+  transform-origin: center;
+}
+#loading-bar-middle {
+  animation: loading-bar-morph 1s linear 0.2s infinite;
+  transform-origin: center;
+}
+#loading-bar-right {
+  animation: loading-bar-morph 1s linear 0.4s infinite;
+  transform-origin: center;
+}
+@keyframes loading-bar-morph {
+  0% {
+    transform: scaleY(1);
+  }
+  25% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(0.7);
+  }
+  75% {
+    transform: scaleY(0.15);
+  }
+}
+
 .time_date {
   color: #747474;
   display: block;
@@ -150,7 +177,8 @@ img {
 }
 
 .received_withd_msg {
-  width: 57%;
+  width: "30vw";
+  /* width: auto; */
 }
 
 .mesgs {

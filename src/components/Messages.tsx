@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 
 import { SendMessage } from "./SendMessage";
 import { IncomingMessage } from "./IncomingMessage";
@@ -10,10 +10,11 @@ import { AuthContext } from "../auth/AuthContext";
 export const Messages = () => {
   const { chatState } = useContext(ChatContext);
   const { auth } = useContext(AuthContext);
+
   return (
-    <div className="mesgs">
+    <div className="mesgs" style={{ marginBottom: 100 }}>
       {/* <!-- Historia inicio --> */}
-      <div className="msg_history" id="messages">
+      <div className="msg_history" id="messages" style={{ height: "80vh" }}>
         {chatState.messages.map((msg) =>
           msg.to === auth.uid ? (
             <IncomingMessage key={msg._id} message={msg} />

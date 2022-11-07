@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React, { FC, useContext } from "react";
 import { apiChat } from "../api/ApiChat";
 import { AuthContext } from "../auth/AuthContext";
 import { ChatContext } from "../context/chat/ChatContext";
+import { SocketContext } from "../context/SocketContext";
 import { ScrollToBottom } from "../helpers/scrollToBottom";
 // import { SocketContext } from "../context/SocketContext";
 import { MessagesResponse, Usuario } from "../interfaces/models";
@@ -9,9 +10,10 @@ import { MessagesResponse, Usuario } from "../interfaces/models";
 interface Props {
   usuario: Usuario;
 }
-export const ConversationActive = ({ usuario }: Props) => {
+export const ConversationActive: FC<Props> = ({ usuario }) => {
   const { auth } = useContext(AuthContext);
   const { chatState, activeChat, loadMessages } = useContext(ChatContext);
+  const { socket } = useContext(SocketContext);
   //activamos la ventana del chat que el usuario haga click
   //recuerda que usuario.uid es el id del usuario que estamos extrayendo de la base de datos
   const onClick = async () => {
@@ -23,9 +25,11 @@ export const ConversationActive = ({ usuario }: Props) => {
     ScrollToBottom("messages");
     console.log(res.data.msg);
   };
-  // const { usuarios } = useContext(SocketContext);
-  // const { name, logged } = auth;
-  //add post for upload image
+
+  // socket?.on("new-notification", (messageFrom) => {
+  //   console.log("new message from:", messageFrom);
+  // });
+
   return (
     <div className="chat_list" onClick={onClick}>
       <div className="chat_people">

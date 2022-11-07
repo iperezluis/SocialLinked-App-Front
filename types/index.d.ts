@@ -1,4 +1,5 @@
-/// <reference types="react-scripts" />
+export {};
+
 declare global {
   interface Window {
     stream: MediaStream;

@@ -1,19 +1,25 @@
-import { Blob } from "buffer";
-import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useContext,
+  useState,
+  useRef,
+  RefObject,
+} from "react";
 import { apiChat } from "../api/ApiChat";
 
 import { AuthContext } from "../auth/AuthContext";
 import { ChatContext } from "../context/chat/ChatContext";
 import { SocketContext } from "../context/SocketContext";
-import { useSocket } from "../hooks/useSocket";
-import { ImageResponse } from "../interfaces/models";
 
 export const SendMessage = () => {
   const [message, setMessage] = useState<string>("");
   const { auth } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
   const { chatState } = useContext(ChatContext);
-  const [image, setImage] = useState<string>();
+  const [URLimage, setURLImage] = useState<string>();
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  // const onSubmitRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,34 +27,45 @@ export const SendMessage = () => {
     if (message.length === 0) {
       return;
     }
-    setMessage("");
-    setImage("");
     socket?.emit("enviar-mensaje", {
       from: auth.uid,
       to: chatState.chatActivo, //el chatActivo contiene el uid del usuario cuando clickeaste el screen
       message: message,
+      image: URLimage,
     });
+    setMessage("");
+    setURLImage("");
   };
-  const loadImage = async (e: ChangeEvent<HTMLInputElement>) => {
+  const loadImage = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+    if (!target.files || target.files.length === 0) {
+      return;
+    }
     try {
-      setImage(URL.createObjectURL(e.target.files![0]));
-      const file = e.target.files![0];
+      // setImage(URL.createObjectURL(target.files![0]));
+      const file = target.files![0];
+      console.log("file enviada:", file);
       const formData = new FormData();
-      formData.append("archivo", file);
-
-      const res = await apiChat.post<ImageResponse>("/imageuser", formData);
-
-      console.log(e.target.files![0]);
-      console.log(res.data);
-      const mensaje = document.querySelector("#messages");
-      mensaje!.innerHTML += `<img
-            src=${e.target.files![0]} 
-            style={{ width: 25, height: 25, marginLeft: 10 }}
-            alt="load"
-          />`;
+      formData.append("file", file);
+      const { data } = await apiChat.post<{ message: string }>(
+        "/imageuser",
+        formData
+      );
+      console.log("URL de cloudinary:", data.message);
+      setURLImage(data.message);
+      setMessage(data.message);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const initVideoCall = () => {
+    socket?.emit("iniciando-videollamada", {
+      from: auth.uid,
+      to: chatState.chatActivo, //el chatActivo contiene el uid del usuario cuando clickeaste el screen
+      isCalling: true,
+      message: message,
+      image: URLimage,
+    });
   };
 
   return (
@@ -56,6 +73,7 @@ export const SendMessage = () => {
       action=" "
       onSubmit={(e) => onSubmit(e)}
       encType="multipart/form-data"
+      style={{ height: "50vh" }}
     >
       {/* <div className="type_msg row"> */}
       <div
@@ -63,9 +81,24 @@ export const SendMessage = () => {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          // backgroundColor: "red",
+          justifyContent: "space-between",
+          backgroundColor: "rgba(255,255,255,0.2)",
         }}
       >
+        {URLimage && (
+          <img
+            src={URLimage}
+            style={{
+              width: "20vw",
+              height: "30vh",
+              // marginLeft: 10,
+              position: "absolute",
+              bottom: "10vh",
+              right: "28vw",
+            }}
+            alt="load"
+          />
+        )}
         <div className="" style={{ marginRight: 10 }}>
           <input
             type="text"
@@ -73,40 +106,47 @@ export const SendMessage = () => {
             placeholder="Mensaje..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            style={{ width: 300 }}
+            style={{
+              width: "30vw",
+              borderRadius: 10,
+              height: "5vh",
+            }}
           />
         </div>
+
+        <button
+          type="submit"
+          className="btn btn-success"
+          // onClick={() => onSubmitRef.current?.onsubmit()}
+        >
+          Enviar
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => inputFileRef.current?.click()}
+        >
+          Imagen
+        </button>
+
+        {/* <FontAwesomeIcon icon="youtube" size="lg" visibility={"100"} /> */}
         <input
+          ref={inputFileRef}
           type="file"
-          accept="image/*"
+          accept="image/png, image/gif, image/jpeg, image/jpg"
+          style={{ display: "none" }}
           name="image"
           id="file"
           onChange={(e) => loadImage(e)}
-          style={{ width: 65, height: 25 }}
         />
+
+        <button type="button" className="btn btn-dark" onClick={initVideoCall}>
+          Iniciar videollamda
+        </button>
         {/* <label htmlFor="image">Upload Image</label> */}
-        {image && (
-          <img
-            src={image}
-            style={{ width: 25, height: 25, marginLeft: 10 }}
-            alt="load"
-          />
-        )}
 
         {/* <div className="col-sm-3 text-center"> */}
-        <button
-          style={{
-            width: 60,
-            height: 25,
-            backgroundColor: "blue",
-            borderRadius: 5,
-            color: "white",
-            marginLeft: 10,
-          }}
-          type="submit"
-        >
-          enviar
-        </button>
+
         {/* </div> */}
       </div>
     </form>

@@ -6,11 +6,20 @@ export interface LoginResponse {
   token: string;
 }
 
+export interface IUser {
+  _id: string;
+  nombre: string;
+  email: string;
+  online: boolean;
+  __v?: number;
+  image?: string;
+}
 export interface Usuario {
   nombre: string;
   email: string;
   online: boolean;
   uid: string;
+  messages: Message[];
   image?: string;
 }
 export interface Message {
