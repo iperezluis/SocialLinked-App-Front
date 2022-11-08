@@ -4,8 +4,8 @@ import React, {
   useContext,
   useState,
   useRef,
-  RefObject,
 } from "react";
+import { CameraVideo, Image, Send } from "react-bootstrap-icons";
 import { apiChat } from "../api/ApiChat";
 
 import { AuthContext } from "../auth/AuthContext";
@@ -24,7 +24,7 @@ export const SendMessage = () => {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(message);
-    if (message.length === 0) {
+    if (message.length === 0 || !message) {
       return;
     }
     socket?.emit("enviar-mensaje", {
@@ -58,6 +58,15 @@ export const SendMessage = () => {
     }
   };
 
+  const clearMessage = () => {
+    document.querySelector("#message")?.setAttribute("value", "''");
+    let file = document.querySelector("#message");
+    console.log("file features", file);
+    setURLImage("");
+    setMessage("");
+    //eliminar de cloudinary
+  };
+
   const initVideoCall = () => {
     socket?.emit("iniciando-videollamada", {
       from: auth.uid,
@@ -86,21 +95,48 @@ export const SendMessage = () => {
         }}
       >
         {URLimage && (
-          <img
-            src={URLimage}
-            style={{
-              width: "20vw",
-              height: "30vh",
-              // marginLeft: 10,
-              position: "absolute",
-              bottom: "10vh",
-              right: "28vw",
-            }}
-            alt="load"
-          />
+          <>
+            <button
+              onClick={clearMessage}
+              style={{
+                width: 25,
+                height: 25,
+                borderRadius: 100,
+                position: "absolute",
+                backgroundColor: "#000",
+                bottom: "38vh",
+                right: "29vw",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 25,
+                  color: "#FFF",
+                  position: "absolute",
+                  top: -10,
+                  right: 4,
+                }}
+              >
+                &times;
+              </p>
+            </button>
+            <img
+              src={URLimage}
+              style={{
+                width: "20vw",
+                height: "30vh",
+                // marginLeft: 10,
+                position: "absolute",
+                bottom: "10vh",
+                right: "28vw",
+              }}
+              alt="load"
+            />
+          </>
         )}
         <div className="" style={{ marginRight: 10 }}>
           <input
+            id="message"
             type="text"
             className="write_msg"
             placeholder="Mensaje..."
@@ -119,14 +155,14 @@ export const SendMessage = () => {
           className="btn btn-success"
           // onClick={() => onSubmitRef.current?.onsubmit()}
         >
-          Enviar
+          <Send color="#FFF" size={20} />
         </button>
         <button
           type="button"
           className="btn btn-primary"
           onClick={() => inputFileRef.current?.click()}
         >
-          Imagen
+          Imagen <Image color="#FFF" size={20} />
         </button>
 
         {/* <FontAwesomeIcon icon="youtube" size="lg" visibility={"100"} /> */}
@@ -141,7 +177,7 @@ export const SendMessage = () => {
         />
 
         <button type="button" className="btn btn-dark" onClick={initVideoCall}>
-          Iniciar videollamda
+          Video llamada <CameraVideo color="#FFF" size={20} />
         </button>
         {/* <label htmlFor="image">Upload Image</label> */}
 

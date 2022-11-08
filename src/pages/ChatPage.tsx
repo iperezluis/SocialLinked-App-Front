@@ -7,10 +7,15 @@ import { Messages } from "../components/Messages";
 import { SocketContext } from "../context/SocketContext";
 import ToastComponent from "../components/Toast";
 import ScreenVideoCall from "../components/ScreenVideoCall";
-import { openCamera, drawImage, closeCamera } from "../helpers/mediaStream";
+import {
+  openCamera,
+  drawImage,
+  closeCamera,
+  muteAudio,
+} from "../helpers/mediaStream";
 import { AuthContext } from "../auth/AuthContext";
 import { Alert, Spinner } from "react-bootstrap";
-// import { OutgoingMessage } from "../components/OutgoingMessage";
+import { Mic, MicMute, TelephoneX } from "react-bootstrap-icons";
 
 export const ChatPage = () => {
   const { chatState } = useContext(ChatContext);
@@ -32,6 +37,9 @@ export const ChatPage = () => {
   const [showOffline, setShowOffline] = useState(false);
   const [onLive, setOnLive] = useState(true);
   const [OutgoingCall, setOutgoingCall] = useState(false);
+  const [onSilent, setOnSilent] = useState(false);
+  const [missedCallFrom, setMissedCallFrom] = useState("");
+  const [missedCall, setMissedCall] = useState<boolean>(false);
 
   const checkConnection = () => {
     //chek offline
@@ -65,15 +73,20 @@ export const ChatPage = () => {
     checkConnection();
   }, []);
 
+  const updateMessages = () => {
+    return <Messages />;
+  };
   socket?.on("new-notification", (messageFrom) => {
     console.log("new message from:", messageFrom);
-    setFromMessage(messageFrom);
+    setFromMessage(messageFrom.nombre);
     toggleShowA();
+    updateMessages();
     setTimeout(() => {
       onClose();
     }, 5000);
   });
-  socket?.on("iniciando-videollamada", (callFrom) => {
+
+  socket?.on("recibiendo-videollamada", (callFrom) => {
     console.log("Te esta llamando: ", callFrom);
     setIsCalling(true);
     setUserTo(callFrom.uid);
@@ -82,7 +95,7 @@ export const ChatPage = () => {
   socket?.on("llamada-saliente", (callback) => {
     console.log("llamando a: ", callback.nombre);
     console.log(callback);
-
+    setUserTo(callback.uid);
     setToVideoCall(callback.nombre);
     setOutgoingCall(true);
     // setIsCalling(true);
@@ -96,8 +109,26 @@ export const ChatPage = () => {
     openCamera();
     drawImage();
   });
+  socket?.on("llamada-cancelada-from", (callback) => {
+    ///Desiret
+    console.log("llamada perdida de", callback.nombre);
+    setMissedCallFrom(callback.nombre);
+    setOutgoingCall(false);
+    setIsCalling(false);
+    setMissedCall(true);
+    setTimeout(() => {
+      setMissedCall(false);
+    }, 10000);
+  });
+  socket?.on("llamada-cancelada-to", (callback) => {
+    ///LUIS ALEJANDRO
+    console.log("cancelaste la llamada a", callback.nombre);
+    setOutgoingCall(false);
+    setIsCalling(false);
+  });
   socket?.on("en-vivo", (callback) => {
     console.log("estas en vivo con: ", callback.nombre);
+    setFromVideoCall(callback.nombre);
     setOutgoingCall(false);
     setShowAlert(true);
     openCamera();
@@ -117,14 +148,25 @@ export const ChatPage = () => {
   });
   socket?.on("llamada-finalizada", (callback) => {
     console.log(`llamada con ${callback.nombre} finalizada :(`);
-    closeCamera();
-  });
-  socket?.on("llamada-finalizada-from", (callback) => {
-    console.log(`llamada con ${callback.nombre} finalizada :(`);
+    setFromVideoCall(callback.nombre);
     closeCamera();
     setOnLive(true);
     setShowAlert(false);
     setShowAlertTo(false);
+    //DESIRET
+    setshowAlertFinished(true);
+    setTimeout(() => {
+      setshowAlertFinished(false);
+    }, 5000);
+  });
+  socket?.on("llamada-finalizada-from", (callback) => {
+    console.log(`llamada con ${callback.nombre} finalizada :(`);
+    setToVideoCall(callback.nombre);
+    closeCamera();
+    setOnLive(true);
+    setShowAlert(false);
+    setShowAlertTo(false);
+    //luis laejandro
     setshowAlertFinishedFrom(true);
     setTimeout(() => {
       setshowAlertFinishedFrom(false);
@@ -145,8 +187,10 @@ export const ChatPage = () => {
     setIsCalling(false);
     setOnLive(true);
     //Todo abrid la camera de mi navegador y el del cliente
-    socket?.emit("llamada-rechazada", {
+    socket?.emit("llamada-cancelada", {
       status: false,
+      from: auth.uid,
+      to: userTo,
     });
   };
   const finishVideoCall = () => {
@@ -154,8 +198,11 @@ export const ChatPage = () => {
     closeCamera();
     setOnLive(true);
     setShowAlert(false);
+    setShowAlertTo(false);
     setshowAlertFinished(true);
+    setshowAlertFinishedFrom(true);
     setTimeout(() => {
+      setshowAlertFinishedFrom(false);
       setshowAlertFinished(false);
     }, 5000);
     socket?.emit("finalizar-llamada", {
@@ -165,6 +212,11 @@ export const ChatPage = () => {
     });
   };
 
+  const startSilent = () => {
+    muteAudio();
+    setOnSilent(!onSilent);
+  };
+
   return (
     <div className="inbox_msg">
       <div className="messaging">
@@ -172,32 +224,6 @@ export const ChatPage = () => {
         {/* this select chat es si el usuario n oha seleccioando ningun chat entonces muestra un icono */}
         {chatState.chatActivo ? (
           <div style={{ height: "90vh" }}>
-            <nav>
-              <div
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  display: "flex",
-                  // backgroundColor: "red",
-                }}
-              >
-                <img
-                  src={
-                    "1"
-                      ? "1"
-                      : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
-                  }
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 100,
-                    marginRight: 10,
-                  }}
-                  alt="load"
-                />
-                {/* <h4> {userId}</h4> */}
-              </div>
-            </nav>
             <Messages />
           </div>
         ) : (
@@ -233,7 +259,7 @@ export const ChatPage = () => {
         picture={
           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
         }
-        body={`${fromMessage} te ha enviado un nuevo mensaje`}
+        body={`Te ha enviado un nuevo mensaje`}
         active={showA}
         onClose={onClose}
       />
@@ -329,6 +355,25 @@ export const ChatPage = () => {
         </Alert>
       )}
 
+      {missedCall && (
+        <Alert
+          show={missedCall}
+          variant={"danger"}
+          style={{
+            zIndex: 999,
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            top: 0,
+            right: 0,
+            left: 0,
+            height: "10vh",
+          }}
+        >
+          {`Tienes una llamada perdida de ${missedCallFrom}`}
+        </Alert>
+      )}
       {/* <!-- Stream video via webcam --> */}
       <div
         hidden={!showAlert && !showAlertTo}
@@ -352,14 +397,14 @@ export const ChatPage = () => {
             // backgroundColor: "red",
           }}
         >
-          {/* <video id="video" autoPlay playsInline ></video> */}
+          {/* <video id="video" autoPlay playsInline  ></video> */}
         </div>
       </div>
 
       {/* <!-- Trigger canvas web API --> */}
       <div className="controller">
         <button
-          className="btn btn-primary"
+          // className="btn btn-primary"
           id="snap"
           // style={{ position: "absolute" }}
         ></button>
@@ -367,9 +412,35 @@ export const ChatPage = () => {
           hidden={onLive}
           className="btn btn-danger"
           onClick={finishVideoCall}
-          style={{ position: "absolute", left: "50vw", bottom: "15vh" }}
+          style={{
+            position: "absolute",
+            left: "55vw",
+            bottom: "15vh",
+            borderRadius: 100,
+            // height: 50,
+            // width: 50,
+          }}
         >
-          Finalizar llamada
+          Finalizar llamada <TelephoneX size={25} color="#FFF" />
+        </button>
+        <button
+          hidden={onLive}
+          className="btn btn-dark"
+          onClick={startSilent}
+          style={{
+            position: "absolute",
+            left: "45vw",
+            bottom: "15vh",
+            borderRadius: 100,
+            height: 50,
+            width: 50,
+          }}
+        >
+          {onSilent ? (
+            <MicMute size={25} color="#FFF" />
+          ) : (
+            <Mic size={25} color="#FFF" />
+          )}
         </button>
       </div>
 

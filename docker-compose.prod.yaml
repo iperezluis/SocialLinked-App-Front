@@ -1,0 +1,36 @@
+version: "2.2"
+
+services:
+  social-linkapp:
+    # depends_on:
+    # - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: socialinkfront-image
+    container_name: socialink-container
+    restart: always # reiniciar el contenedor si se detiene
+    ports:
+      - "80:3000"
+    # working_dir: /var/www/pokedex
+    environment:
+      # MONGO_URL: ${MONGO_URL}
+      # JWT_KEY: ${JWT_KEY}
+      # PORT: ${PORT}
+      # URL_PAGE: ${URL_PAGE}
+      # SECRET_KEY_JWT: ${SECRET_KEY_JWT}
+      # CLOUDINARY_URL: ${CLOUDINARY_URL}
+
+    # volumes:
+    #   - ./:/var/www/pokedex
+
+  # db:
+  #   image: mongo:5
+  #   container_name: spaceshop-database
+  #   restart: always
+  #   ports:
+  #     - 27017:27017
+  #   environment:
+  #     MONGODB_DATABASE: spacedb
+  #   volumes:
+  #     - ./mongo:/data/db

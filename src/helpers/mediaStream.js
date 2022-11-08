@@ -1,5 +1,5 @@
 const constraints = {
-  audio: false,
+  audio: true,
   video: {
     width: 780,
     height: 450,
@@ -7,12 +7,12 @@ const constraints = {
 };
 
 // Access webcam
-let actualStream;
+// let stream;
 const openCamera = async () => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    console.log("stream", stream);
-    actualStream = stream;
+    // getStream(stream);
+    console.log("stream", stream.getAudioTracks()[0]);
     handleSuccess(stream);
   } catch (error) {
     console.log(error);
@@ -23,11 +23,13 @@ const openCamera = async () => {
 // if (document.querySelector("#video")) {
 //   document.querySelector("#video").remove();
 // }
+// let hasMuted = false;
 let video = document.createElement("video");
 function handleSuccess(stream) {
   video.setAttribute("id", "video");
   video.setAttribute("autoPlay", true);
   video.setAttribute("playsInline", true);
+  video.setAttribute("muted", "true");
   // video.setAttribute("style", "{{position:'absolute',top:0}}");
   document.querySelector("#video-wrap").appendChild(video);
   window.stream = stream;
@@ -39,6 +41,26 @@ const closeCamera = () => {
   video.srcObject.getTracks().map((videos) => videos.stop());
   video.srcObject.getTracks()[0].stop();
   video.remove();
+};
+//stream capturado
+// const getStream = (streamCap) => {
+//   return { streamCap };
+// };
+// console.log("stream capturado", stream);
+// Muted audio
+const muteAudio = () => {
+  // const { streamCap } = getStream;
+  // console.log("stream capturado", streamCap);
+  console.log("windows features", window.stream.getAudioTracks()[0]);
+  let audio = window.stream.getAudioTracks()[0];
+  if (!audio.enabled) {
+    audio.enabled = true;
+    return { hasAudio: true };
+  }
+  if (audio.enabled) {
+    audio.enabled = false;
+    return { hasAudio: false };
+  }
 };
 
 // Draw image
@@ -62,4 +84,4 @@ const drawImage = () => {
   });
 };
 
-module.exports = { openCamera, drawImage, closeCamera };
+module.exports = { openCamera, drawImage, closeCamera, video, muteAudio };

@@ -13,7 +13,7 @@ interface Props {
 export const ConversationActive: FC<Props> = ({ usuario }) => {
   const { auth } = useContext(AuthContext);
   const { chatState, activeChat, loadMessages } = useContext(ChatContext);
-  const { socket } = useContext(SocketContext);
+  // const { socket } = useContext(SocketContext);
   //activamos la ventana del chat que el usuario haga click
   //recuerda que usuario.uid es el id del usuario que estamos extrayendo de la base de datos
   const onClick = async () => {

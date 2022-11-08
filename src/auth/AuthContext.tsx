@@ -5,13 +5,12 @@ import {
   useEffect,
   useContext,
 } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import swal, { SweetAlertResult } from "sweetalert2";
 
 import { apiChat } from "../api/ApiChat";
 import { LoginResponse } from "../interfaces/models";
 import { Loading } from "../components/Loading";
-import { SocketContext } from "../context/SocketContext";
 import { ChatContext } from "../context/chat/ChatContext";
 
 export type InitialState = {

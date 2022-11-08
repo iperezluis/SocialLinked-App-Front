@@ -6,7 +6,6 @@ export const SelectChat = () => {
       <div className="alert-info">
         <p>Por favor seleccione un chat</p>
       </div>
-      <div></div>
     </div>
   );
 };
