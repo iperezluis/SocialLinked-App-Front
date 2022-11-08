@@ -8,7 +8,7 @@ const constraints = {
 
 // Access webcam
 // let stream;
-const openCamera = async () => {
+export const openCamera = async () => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
     // getStream(stream);
@@ -37,7 +37,7 @@ function handleSuccess(stream) {
 }
 
 // Stop webcam
-const closeCamera = () => {
+export const closeCamera = () => {
   video.srcObject.getTracks().map((videos) => videos.stop());
   video.srcObject.getTracks()[0].stop();
   video.remove();
@@ -48,7 +48,7 @@ const closeCamera = () => {
 // };
 // console.log("stream capturado", stream);
 // Muted audio
-const muteAudio = () => {
+export const muteAudio = () => {
   // const { streamCap } = getStream;
   // console.log("stream capturado", streamCap);
   console.log("windows features", window.stream.getAudioTracks()[0]);
@@ -64,7 +64,7 @@ const muteAudio = () => {
 };
 
 // Draw image
-const drawImage = () => {
+export const drawImage = () => {
   // document.getElementById("canvas").remove();
   const snap = document.querySelector("#snap");
   // document.querySelector("#video").remove();
