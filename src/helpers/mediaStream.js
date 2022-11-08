@@ -84,4 +84,4 @@ export const drawImage = () => {
   });
 };
 
-module.exports = { openCamera, drawImage, closeCamera, video, muteAudio };
+// module.exports = { openCamera, drawImage, closeCamera, video, muteAudio };
