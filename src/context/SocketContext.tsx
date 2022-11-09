@@ -23,8 +23,8 @@ export const SocketProvider = ({
   const { loadUsers, newMessage } = useContext(ChatContext);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const { onLine, socket, connectSocket, disconnectSocket } = useSocket(
-    "http://localhost:3500" /*--> development*/
-    // "https://socialinked-app.herokuapp.com" /*--> production*/
+    // "http://localhost:3500" /*--> development*/
+    "https://socialinked-app.herokuapp.com" /*--> production*/
   );
   //--> este es el localhost del servidor(backEnd)
   // cleanChat function suing useCallback
