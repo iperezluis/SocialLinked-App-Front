@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../auth/AuthContext";
+import { AuthContext } from "../AuthContext";
 
-import "../css/login-register.css";
+import "../../css/login-register.css";
 
 export const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -22,14 +22,14 @@ export const RegisterPage = () => {
   };
   const { register } = useContext(AuthContext);
   return (
-    <div className="limiter">
+    <div className="limiter" id="recomendations">
       <div className="container-login100">
         <div className="wrap-login100 p-t-50 p-b-90">
           <form
             className="login100-form validate-form flex-sb flex-w"
             onSubmit={(e) => onSubmit(e)}
           >
-            <span className="login100-form-title mb-3">Chat - Registro</span>
+            <span className="login100-form-title mb-3">¡Registrate ahora!</span>
 
             <div className="wrap-input100 validate-input mb-3">
               <input

@@ -7,9 +7,10 @@ import React, {
 } from "react";
 
 import { Link } from "react-router-dom";
+import { Fingerprint } from "react-bootstrap-icons";
 
-import "../css/login-register.css";
-import { AuthContext } from "../auth/AuthContext";
+import "../../css/login-register.css";
+import { AuthContext } from "../AuthContext";
 
 export const LoginPage = () => {
   //vamos a manejar los valores del formulario d emanera mas profesional asi que es mejor hacer un objeto cons los campos del formulario
@@ -55,14 +56,14 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="limiter">
+    <div className="limiter" id="recomendations">
       <div className="container-login100">
         <div className="wrap-login100 p-t-50 p-b-90">
           <form
-            className="login100-form validate-form flex-sb flex-w"
+            // className="login100-form validate-form flex-sb flex-w"
             onSubmit={(e) => onSubmit(e)}
           >
-            <span className="login100-form-title mb-3">Chat - Ingreso</span>
+            <span className="login100-form-title mb-3">iniciar sesion</span>
 
             <div className="wrap-input100 validate-input mb-3">
               <input
@@ -110,7 +111,14 @@ export const LoginPage = () => {
             </div>
 
             <div className="container-login100-form-btn m-t-17">
-              <button className="login100-form-btn">Ingresar</button>
+              <button className="login100-form-btn">
+                Ingresar{" "}
+                <Fingerprint
+                  size={28}
+                  color="#FFF"
+                  style={{ marginLeft: 20 }}
+                />
+              </button>
             </div>
           </form>
         </div>

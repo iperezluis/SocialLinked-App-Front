@@ -117,10 +117,13 @@ export const AuthProvider = ({
           email: email,
         });
       }
+      Navigate("/messages");
     } catch (error) {
       if (!email || !password || !name) {
+        setIsLoading(false);
         return swal.fire("Error", "Los campos estan vacios", "info");
       }
+      setIsLoading(false);
       swal.fire("Error", "El usuario ya existe", "error");
     }
   };
