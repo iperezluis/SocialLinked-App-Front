@@ -82,7 +82,14 @@ export const SendMessage = () => {
       action=" "
       onSubmit={(e) => onSubmit(e)}
       encType="multipart/form-data"
-      style={{ height: "50vh" }}
+      style={{
+        height: "10vh",
+        // backgroundColor: "red",
+        // position: "absolute",
+        // bottom: 5,
+        // right: 0,
+        // left: 0,
+      }}
     >
       {/* <div className="type_msg row"> */}
       <div
@@ -183,11 +190,6 @@ export const SendMessage = () => {
         <button type="button" className="btn btn-dark" onClick={initVideoCall}>
           Video llamada <CameraVideo color="#FFF" size={20} />
         </button>
-        {/* <label htmlFor="image">Upload Image</label> */}
-
-        {/* <div className="col-sm-3 text-center"> */}
-
-        {/* </div> */}
       </div>
     </form>
   );

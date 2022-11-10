@@ -24,9 +24,9 @@ WORKDIR /usr/src/app
 COPY package.json yarn.lock ./
 RUN yarn install --prod 
 # RUN yarn install --prod --ignore-engines
-COPY --from=builder /app/.next ./.next
-# COPY --from=builder /app/.next ./.next
-# COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/.build ./.build
+# COPY --from=builder /app/.next ./.next  #Nextjs
+# COPY --from=builder /app/dist ./dist       #Nestjs
 
 # # Copiar el directorio y su contenido
 # RUN mkdir -p ./pokedex
