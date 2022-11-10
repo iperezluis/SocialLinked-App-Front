@@ -184,14 +184,6 @@ export const AuthProvider = ({
     checkToken();
   }, [checkToken]);
 
-  useEffect(() => {
-    if (auth.logged) {
-      return Navigate("/messages");
-    } else {
-      return Navigate("/auth/login");
-    }
-  }, [auth.logged]);
-
   if (isLoading) {
     return <Loading />;
   }
