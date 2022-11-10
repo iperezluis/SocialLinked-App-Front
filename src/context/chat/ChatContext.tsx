@@ -1,6 +1,5 @@
-import React, { createContext, useReducer, useState, useCallback } from "react";
-import { apiChat } from "../../api/ApiChat";
-import { ImageResponse, Message, Usuario } from "../../interfaces/models";
+import React, { createContext, useReducer, useCallback } from "react";
+import { Message, Usuario } from "../../interfaces/models";
 import { ChatReducer } from "./ChatReducer";
 
 export interface InitialStateChat {

@@ -144,7 +144,7 @@ export const AuthProvider = ({
   const checkToken = useCallback(async (): Promise<void> => {
     const token = localStorage.getItem("token");
     if (!token) {
-      setAuth({
+      return setAuth({
         uid: null,
         checking: false,
         logged: false,

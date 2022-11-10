@@ -103,6 +103,7 @@ export const SendMessage = () => {
                 height: 25,
                 borderRadius: 100,
                 position: "absolute",
+                zIndex: 999,
                 backgroundColor: "#000",
                 bottom: "38vh",
                 right: "29vw",
@@ -125,6 +126,7 @@ export const SendMessage = () => {
               style={{
                 width: "20vw",
                 height: "30vh",
+                // resize: "block",
                 // marginLeft: 10,
                 position: "absolute",
                 bottom: "10vh",
@@ -144,7 +146,9 @@ export const SendMessage = () => {
             onChange={(e) => setMessage(e.target.value)}
             style={{
               width: "30vw",
+              // color: "blue",
               borderRadius: 10,
+              borderColor: "#000",
               height: "5vh",
             }}
           />
