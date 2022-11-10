@@ -84,11 +84,6 @@ export const SendMessage = () => {
       encType="multipart/form-data"
       style={{
         height: "10vh",
-        // backgroundColor: "red",
-        // position: "absolute",
-        // bottom: 5,
-        // right: 0,
-        // left: 0,
       }}
     >
       {/* <div className="type_msg row"> */}

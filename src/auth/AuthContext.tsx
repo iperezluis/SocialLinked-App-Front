@@ -77,9 +77,9 @@ export const AuthProvider = ({
           email: email,
           image: image,
         });
-        // navigate("/messages", {});
-        console.log(auth);
-        console.log(res.data.ok);
+        Navigate("/messages", {});
+        // console.log(auth);
+        // console.log(res.data.ok);
       }
     } catch (error) {
       // console.log(JSON.stringify(error));
@@ -183,6 +183,13 @@ export const AuthProvider = ({
   useEffect(() => {
     checkToken();
   }, [checkToken]);
+
+  useEffect(() => {
+    if (auth.logged) {
+      return Navigate("/message");
+    }
+    return Navigate("/auth/login");
+  }, [auth.logged]);
 
   if (isLoading) {
     return <Loading />;
