@@ -2,7 +2,8 @@ import axios from "axios";
 
 export const apiChat = axios.create({
   // baseURL: `http://localhost:3500/api`,
-  baseURL: "https://socialinked-app.herokuapp.com/api",
+  // baseURL: "https://socialinked-app.herokuapp.com/api",
+  baseURL: "https://sociallinked-back.up.railway.app/api",
 });
 
 apiChat.interceptors.request.use(async (config) => {
