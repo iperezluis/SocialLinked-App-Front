@@ -55,7 +55,6 @@ export const ChatPage = () => {
       },
       false
     );
-    //chek online
     window.addEventListener(
       "online",
       (e) => {
